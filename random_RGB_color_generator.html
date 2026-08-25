@@ -4,11 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        :root { font-family: Inter, system-ui, sans-serif; }
+        * { box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            color: white;
+            transition: background 700ms ease;
+            background: #222;
+        }
+        .card {
+            width: min(90vw, 440px);
+            padding: 2.5rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,.3);
+            border-radius: 24px;
+            background: rgba(0,0,0,.28);
+            box-shadow: 0 20px 60px rgba(0,0,0,.3);
+            backdrop-filter: blur(14px);
+        }
+        h1 { margin-top: 0; font-size: clamp(1.8rem, 7vw, 2.6rem); }
+        #colorDisplay {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border-radius: 12px;
+            font-family: ui-monospace, monospace;
+            background: rgba(0,0,0,.35);
+        }
+        button {
+            border: 0;
+            border-radius: 999px;
+            padding: .9rem 1.4rem;
+            color: #222;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .2s, box-shadow .2s;
+        }
+        button:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+    </style>
 </head>
 <body>
-    <h1>
-        Random RGB Color Generator
-    </h1>
+    <main class="card">
+        <h1>Random RGB Color Generator</h1>
+        <p id="colorDisplay"></p>
+        <button id="generateButton">✨ Generate a new color</button>
+    </main>
     <script>
         function generateRandomColor() {
             const r = Math.floor(Math.random() * 256);
@@ -16,9 +59,18 @@
             const b = Math.floor(Math.random() * 256);
             return `rgb(${r}, ${g}, ${b})`;
         }
-        const randomColor = generateRandomColor();
-        document.body.style.backgroundColor = randomColor;
-        document.body.innerHTML += `<p>Random RGB color: ${randomColor}</p>`;
+        const colorDisplay = document.getElementById('colorDisplay');
+        const generateButton = document.getElementById('generateButton');
+
+        function showRandomColor() {
+            const randomColor = generateRandomColor();
+            document.body.style.background = randomColor;
+            colorDisplay.textContent = `Random RGB color: ${randomColor}`;
+            generateButton.style.backgroundColor = randomColor;
+        }
+
+        generateButton.addEventListener('click', showRandomColor);
+        showRandomColor();
     </script>
 </body>
 </html>

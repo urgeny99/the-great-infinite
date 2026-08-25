@@ -5,38 +5,43 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Random Pixel Picture Generator</title>
 	<style>
-		body {
-			margin: 0;
-			min-height: 100vh;
-			display: grid;
-			place-items: center;
-			background: #202020;
-			color: #fff;
-			font-family: Arial, sans-serif;
-		}
+		:root { color-scheme: dark; font-family: system-ui, sans-serif; --blue: #2878d0; --violet: #8d4de8; --pink: #df4fbd; }
+		* { box-sizing: border-box; }
+		body { margin: 0; min-height: 100vh; display: grid; place-items: center; overflow-x: hidden; background: radial-gradient(circle at 15% 10%, #20234d 0, transparent 32%), radial-gradient(circle at 85% 90%, #351543 0, transparent 34%), #080912; color: #eee; }
+		body::before { content: ''; position: fixed; inset: 0; pointer-events: none; opacity: .16; background-image: linear-gradient(#fff1 1px, transparent 1px), linear-gradient(90deg, #fff1 1px, transparent 1px); background-size: 42px 42px; mask-image: linear-gradient(to bottom, #000, transparent 85%); }
+		main { position: relative; width: min(94vw, 1100px); padding: clamp(1.2rem, 4vw, 2.8rem); text-align: center; border: 1px solid #ffffff20; border-radius: 24px; background: #101321cc; box-shadow: 0 24px 90px #000b, inset 0 1px #fff2; backdrop-filter: blur(18px); }
+		main::before { content: 'LIVE PIXEL SYNTHESIS'; display: block; margin-bottom: .65rem; color: #8e9bbd; font-size: .68rem; font-weight: 800; letter-spacing: .28em; }
+		h1 { margin: 0 0 1.2rem; font-size: clamp(1.55rem, 4vw, 2.8rem); letter-spacing: -.04em; background: linear-gradient(100deg, #fff, #a9cfff 42%, #d79cff); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 0 35px #8d4de866; }
 
-		main { text-align: center; }
+		.screen { position: relative; width: 100%; aspect-ratio: 16 / 9; padding: 3px; background: linear-gradient(120deg, var(--blue), var(--violet), var(--pink), var(--blue)); background-size: 300% 300%; border-radius: 15px; overflow: hidden; box-shadow: 0 0 0 1px #ffffff30, 0 0 35px #2878d044, 0 18px 50px #0009; animation: aura 8s ease infinite; }
+		.screen::before { content: 'PIXEL  •  READY'; position: absolute; z-index: 2; top: 1rem; left: 1.15rem; padding: .35rem .55rem; border: 1px solid #ff668877; border-radius: 5px; color: #ffb4c8; background: #120b1aaa; font: 800 .62rem/1 system-ui; letter-spacing: .12em; box-shadow: 0 0 16px #df4fbd66; }
+		.screen::after { content: ''; position: absolute; inset: 3px; pointer-events: none; background: linear-gradient(transparent 50%, #fff1 50%), radial-gradient(circle, transparent 45%, #0009); background-size: 100% 4px, 100% 100%; mix-blend-mode: screen; opacity: .2; }
+		canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+		.hud { position: absolute; z-index: 2; right: 1.15rem; bottom: 1rem; color: #d9e5ffcc; font: 700 .62rem/1.6 ui-monospace, monospace; letter-spacing: .08em; text-align: right; text-shadow: 0 0 9px #2878d0; }
+		.controls { display: flex; justify-content: center; gap: .75rem; margin-top: 1.25rem; }
 
-		canvas {
-			display: block;
-			width: min(1280px, 95vw);
-			height: auto;
-			image-rendering: pixelated;
-			border: 1px solid #555;
-		}
-
-		button {
-			margin-top: 16px;
-			padding: 10px 20px;
-			font-size: 1rem;
-			cursor: pointer;
-		}
+		button { border: 1px solid #ffffff30; border-radius: 9px; padding: .72rem 1.5rem; color: #fff; background: linear-gradient(135deg, #2878d0, #694edb); font: inherit; font-weight: 750; cursor: pointer; box-shadow: 0 7px 18px #2878d044, inset 0 1px #fff5; transition: transform .2s, box-shadow .2s; }
+		button:hover { transform: translateY(-2px); box-shadow: 0 10px 25px #8d4de866, inset 0 1px #fff7; }
+		button:active { transform: translateY(0); }
+		#download { background: linear-gradient(135deg, #8d4de8, #df4fbd); }
+		#status { margin: 1rem 0 0; color: #8491ae; font-size: .82rem; }
+		.creator { margin: .9rem 0 0; color: #687594; font-size: .76rem; }
+		.creator a { color: #c8b2ff; font-weight: 750; text-decoration: none; }
+		.creator a:hover { color: #fff; text-decoration: underline; }
+		@keyframes aura { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+		@media (max-width: 560px) { main { padding: 1rem; border-radius: 18px; } .controls { flex-wrap: wrap; } }
 	</style>
 </head>
 <body>
 	<main>
-		<canvas id="picture" width="1280" height="720"></canvas>
-		<button id="refresh" type="button">Refresh Image</button>
+		<h1>Random Pixel Picture Generator</h1>
+		<div class="screen">
+			<canvas id="picture" width="1280" height="720" aria-label="Random 720p pixel picture"></canvas>
+			<div class="hud" aria-hidden="true">RANDOM PIXEL SYNTH<br>1280 × 720</div>
+		</div>
+		<div class="controls"><button id="refresh" type="button">Generate image</button><button id="download" type="button">Download image</button></div>
+		<p id="status" role="status">Picture ready · 1280 × 720</p>
+		<p class="creator">Built with pixels by <a href="https://github.com/urgeny99" target="_blank" rel="noopener noreferrer">@urgeny99</a> on GitHub</p>
 	</main>
 
 	<script>
@@ -58,6 +63,12 @@
 		}
 
 		document.getElementById('refresh').addEventListener('click', generateImage);
+		document.getElementById('download').addEventListener('click', () => {
+			const link = document.createElement('a');
+			link.download = 'random-pixel-picture.png';
+			link.href = canvas.toDataURL('image/png');
+			link.click();
+		});
 		generateImage();
 	</script>
 </body>

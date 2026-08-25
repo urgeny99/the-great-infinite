@@ -5,18 +5,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Random Pixel Video Generator</title>
   <style>
-    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; --blue: #2878d0; --violet: #8d4de8; --pink: #df4fbd; }
     * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #111; color: #eee; }
-    main { width: min(96vw, 1100px); text-align: center; }
-    h1 { margin: 0 0 1rem; font-size: clamp(1.25rem, 3vw, 2rem); }
-    .screen { width: 100%; aspect-ratio: 16 / 9; background: #000; border: 2px solid #444; border-radius: 8px; overflow: hidden; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; overflow-x: hidden; background: radial-gradient(circle at 15% 10%, #20234d 0, transparent 32%), radial-gradient(circle at 85% 90%, #351543 0, transparent 34%), #080912; color: #eee; }
+    body::before { content: ''; position: fixed; inset: 0; pointer-events: none; opacity: .16; background-image: linear-gradient(#fff1 1px, transparent 1px), linear-gradient(90deg, #fff1 1px, transparent 1px); background-size: 42px 42px; mask-image: linear-gradient(to bottom, #000, transparent 85%); }
+    main { position: relative; width: min(94vw, 1100px); padding: clamp(1.2rem, 4vw, 2.8rem); text-align: center; border: 1px solid #ffffff20; border-radius: 24px; background: #101321cc; box-shadow: 0 24px 90px #000b, inset 0 1px #fff2; backdrop-filter: blur(18px); }
+    h1 { margin: 0 0 .35rem; font-size: clamp(1.55rem, 4vw, 2.8rem); letter-spacing: -.04em; background: linear-gradient(100deg, #fff, #a9cfff 42%, #d79cff); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 0 35px #8d4de866; }
+    main::before { content: 'LIVE PIXEL SYNTHESIS'; display: block; margin-bottom: .65rem; color: #8e9bbd; font-size: .68rem; font-weight: 800; letter-spacing: .28em; }
+    .screen { position: relative; width: 100%; aspect-ratio: 16 / 9; padding: 3px; background: linear-gradient(120deg, var(--blue), var(--violet), var(--pink), var(--blue)); background-size: 300% 300%; border: 0; border-radius: 15px; overflow: hidden; box-shadow: 0 0 0 1px #ffffff30, 0 0 35px #2878d044, 0 18px 50px #0009; animation: aura 8s ease infinite; }
+    .screen::before { content: 'REC  •  LIVE'; position: absolute; z-index: 2; top: 1rem; left: 1.15rem; padding: .35rem .55rem; border: 1px solid #ff668877; border-radius: 5px; color: #ffb4c8; background: #120b1aaa; font: 800 .62rem/1 system-ui, sans-serif; letter-spacing: .12em; box-shadow: 0 0 16px #df4fbd66; animation: pulse 1.6s ease-in-out infinite; }
+    .screen::after { content: ''; position: absolute; inset: 3px; pointer-events: none; background: linear-gradient(transparent 50%, #fff1 50%), radial-gradient(circle at center, transparent 45%, #0009); background-size: 100% 4px, 100% 100%; mix-blend-mode: screen; opacity: .2; }
+    .hud { position: absolute; z-index: 2; right: 1.15rem; bottom: 1rem; color: #d9e5ffcc; font: 700 .62rem/1.6 ui-monospace, monospace; letter-spacing: .08em; text-align: right; text-shadow: 0 0 9px #2878d0; pointer-events: none; }
+    .screen::after { content: ''; position: absolute; inset: 3px; pointer-events: none; background: linear-gradient(transparent 50%, #fff1 50%); background-size: 100% 4px; mix-blend-mode: screen; opacity: .18; }
     canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
-    .controls { display: flex; justify-content: center; gap: .75rem; margin-top: 1rem; }
-    button { border: 0; border-radius: 6px; padding: .7rem 1.4rem; color: #fff; background: #2878d0; font: inherit; font-weight: 700; cursor: pointer; }
-    button:hover { background: #3990ed; }
+    .controls { display: flex; justify-content: center; gap: .75rem; margin-top: 1.25rem; }
+    .speed-control { display: flex; align-items: center; justify-content: center; gap: .8rem; margin-top: 1.05rem; color: #aeb7d0; font-size: .9rem; }
+    .speed-control input {
+      width: min(280px, 55vw);
+      height: 1.5rem;
+      margin: 0;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    .speed-control input::-webkit-slider-runnable-track {
+      height: .45rem;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #2878d0, #8d4de8, #df4fbd);
+      box-shadow: 0 0 12px #2878d088;
+    }
+    .speed-control input::-moz-range-track {
+      height: .45rem;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #2878d0, #8d4de8);
+      box-shadow: 0 0 12px #2878d088;
+    }
+    .speed-control input::-webkit-slider-thumb {
+      appearance: none;
+      width: 1.15rem;
+      height: 1.15rem;
+      margin-top: -.35rem;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      background: #2878d0;
+      box-shadow: 0 0 0 3px #2878d066, 0 0 16px #3990ed;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .speed-control input::-moz-range-thumb {
+      width: .8rem;
+      height: .8rem;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      background: #2878d0;
+      box-shadow: 0 0 0 3px #2878d066, 0 0 16px #3990ed;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .speed-control input:hover::-webkit-slider-thumb,
+    .speed-control input:focus-visible::-webkit-slider-thumb { transform: scale(1.2); box-shadow: 0 0 0 5px #2878d066, 0 0 22px #3990ed; }
+    .speed-control input:hover::-moz-range-thumb,
+    .speed-control input:focus-visible::-moz-range-thumb { transform: scale(1.2); box-shadow: 0 0 0 5px #2878d066, 0 0 22px #3990ed; }
+    #speedValue { display: inline-block; min-width: 4.5rem; text-align: left; color: #d7baff; font-weight: 800; text-shadow: 0 0 10px #8d4de8; }
+    button { position: relative; border: 1px solid #ffffff30; border-radius: 9px; padding: .72rem 1.5rem; color: #fff; background: linear-gradient(135deg, #2878d0, #694edb); font: inherit; font-weight: 750; cursor: pointer; box-shadow: 0 7px 18px #2878d044, inset 0 1px #fff5; transition: transform .2s, box-shadow .2s, filter .2s; }
+    button:hover { background: linear-gradient(135deg, #3990ed, #a04feb); transform: translateY(-2px); box-shadow: 0 10px 25px #8d4de866, inset 0 1px #fff7; filter: saturate(1.2); }
+    button:active { transform: translateY(0); }
+    #stop { background: #ffffff0d; box-shadow: inset 0 1px #fff2; }
     button:disabled { opacity: .45; cursor: not-allowed; }
-    #status { margin: .75rem 0 0; color: #aaa; font-size: .9rem; }
+    #status { margin: 1rem 0 0; color: #8491ae; font-size: .82rem; letter-spacing: .03em; }
+    .creator { margin: .9rem 0 0; color: #687594; font-size: .76rem; }
+    .creator a { color: #c8b2ff; font-weight: 750; text-decoration: none; text-shadow: 0 0 12px #8d4de888; }
+    .creator a:hover, .creator a:focus-visible { color: #fff; text-decoration: underline; }
+    .feature-badge { display: inline-flex; align-items: center; gap: .4rem; margin-top: .85rem; padding: .35rem .65rem; border: 1px solid #ffffff1c; border-radius: 999px; color: #aebce0; background: #ffffff08; font-size: .68rem; letter-spacing: .05em; }
+    .feature-badge::before { content: ''; width: .42rem; height: .42rem; border-radius: 50%; background: #54e6a5; box-shadow: 0 0 10px #54e6a5; animation: pulse 1.6s ease-in-out infinite; }
+    @keyframes aura { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    @keyframes pulse { 0%, 100% { opacity: .65; } 50% { opacity: 1; } }
+    @media (max-width: 560px) { main { padding: 1rem; border-radius: 18px; } .speed-control { flex-wrap: wrap; } .speed-control input { order: 3; width: 100%; } }
   </style>
 </head>
 <body>
@@ -24,21 +86,36 @@
     <h1>Random Pixel Video Generator</h1>
     <div class="screen">
       <canvas id="canvas" width="1280" height="720" aria-label="Random 720p pixel video"></canvas>
+      <div class="hud" aria-hidden="true">RANDOM PIXEL SYNTH<br><span id="frameCounter">FRAME 000000</span><br>CH 01  •  1280×720</div>
     </div>
     <div class="controls">
       <button id="start" type="button">Start feed</button>
       <button id="stop" type="button">Stop feed</button>
+      <button id="download" type="button" disabled>Download image</button>
     </div>
+    <label class="speed-control" for="speed">
+      Generation speed
+      <input id="speed" type="range" min="1" max="60" value="30">
+      <span id="speedValue">30 FPS</span>
+    </label>
     <p id="status" role="status">Feed running · 1280 × 720</p>
+    <div class="feature-badge">LIVE GENERATIVE EFFECTS</div>
+    <p class="creator">Built with pixels by <a href="https://github.com/urgeny99" target="_blank" rel="noopener noreferrer">@urgeny99</a> on GitHub</p>
   </main>
   <script>
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d', { alpha: false });
     const startButton = document.getElementById('start');
     const stopButton = document.getElementById('stop');
+    const downloadButton = document.getElementById('download');
+    const speedInput = document.getElementById('speed');
+    const speedValue = document.getElementById('speedValue');
     const status = document.getElementById('status');
     let animationId = 0;
     let running = true;
+    let lastFrameTime = 0;
+    let frameCount = 0;
+    const frameCounter = document.getElementById('frameCounter');
 
     function makeFrame() {
       const pixels = ctx.createImageData(canvas.width, canvas.height);
@@ -50,11 +127,16 @@
         data[i + 3] = 255;
       }
       ctx.putImageData(pixels, 0, 0);
+      frameCounter.textContent = `FRAME ${String(++frameCount).padStart(6, '0')}`;
     }
 
-    function render() {
+    function render(timestamp) {
       if (!running) return;
-      makeFrame();
+      const frameInterval = 1000 / Number(speedInput.value);
+      if (timestamp - lastFrameTime >= frameInterval) {
+        makeFrame();
+        lastFrameTime = timestamp;
+      }
       animationId = requestAnimationFrame(render);
     }
 
@@ -64,6 +146,8 @@
       status.textContent = 'Feed running · 1280 × 720';
       startButton.disabled = true;
       stopButton.disabled = false;
+      downloadButton.disabled = true;
+      lastFrameTime = 0;
       render();
     }
 
@@ -74,11 +158,22 @@
       status.textContent = 'Feed stopped · press “Start feed” to continue';
       startButton.disabled = false;
       stopButton.disabled = true;
+      downloadButton.disabled = false;
     }
 
     startButton.addEventListener('click', start);
     stopButton.addEventListener('click', stop);
+    downloadButton.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = `random-pixel-frame-${String(frameCount).padStart(6, '0')}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+    speedInput.addEventListener('input', () => {
+      speedValue.textContent = `${speedInput.value} FPS`;
+    });
     startButton.disabled = true;
+    downloadButton.disabled = true;
     makeFrame();
     render();
   </script>
