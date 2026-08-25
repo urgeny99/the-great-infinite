@@ -2,6 +2,16 @@
 
 So the whole idea of this project is to learn about HTML and Python codes while exploring the limits of computers trough mathematics
 
+## How to explore
+### 1. First check out the random color generator
+- - This generates a completely random color
+
+### 2. Next check out the image generator
+- - this uses the principle from before but it does it about a million times to create one random image (it could even be a selfie of you)
+
+### 3. Then check out the video feed
+- - it can make up to 60 of these images a second to create a 60 fps live feed of chaos (it could predict your home security footage in 25 years) 
+
 ## Ideas plans for this project
 - Make a random number generator in html and python
 - Make three number generators from 0-255 since i can then use that to display a single color
@@ -18,6 +28,9 @@ so that is pretty easy i think but now how do you display that
 #### HTML
 - In HTML you can finally display colors and also use functions but you need JavaScript instead of python
 - also declaring variables is a little more complicate since the whole setup is more comlicated
+
+## Thanks 
+- ig to Jorge Luis Borges for creating the library of babel which this is kinda based on
 
 
 #### Btw this whole project is to not use AI and try to figure things out myself except for the design of the desgin
