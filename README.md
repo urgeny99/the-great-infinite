@@ -20,4 +20,5 @@ so that is pretty easy i think but now how do you display that
 - also declaring variables is a little more complicate since the whole setup is more comlicated
 
 
-#### Btw this whole project is to not use AI and try to figure things out myself
+#### Btw this whole project is to not use AI and try to figure things out myself except for the design of the desgin
+
