@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Random Pixel Picture Generator</title>
+	<style>
+		body {
+			margin: 0;
+			min-height: 100vh;
+			display: grid;
+			place-items: center;
+			background: #202020;
+			color: #fff;
+			font-family: Arial, sans-serif;
+		}
+
+		main { text-align: center; }
+
+		canvas {
+			display: block;
+			width: min(1280px, 95vw);
+			height: auto;
+			image-rendering: pixelated;
+			border: 1px solid #555;
+		}
+
+		button {
+			margin-top: 16px;
+			padding: 10px 20px;
+			font-size: 1rem;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<canvas id="picture" width="1280" height="720"></canvas>
+		<button id="refresh" type="button">Refresh Image</button>
+	</main>
+
+	<script>
+		const canvas = document.getElementById('picture');
+		const context = canvas.getContext('2d');
+
+		function generateImage() {
+			const image = context.createImageData(canvas.width, canvas.height);
+			const pixels = image.data;
+
+			for (let i = 0; i < pixels.length; i += 4) {
+				pixels[i] = Math.floor(Math.random() * 256);     // Red
+				pixels[i + 1] = Math.floor(Math.random() * 256); // Green
+				pixels[i + 2] = Math.floor(Math.random() * 256); // Blue
+				pixels[i + 3] = 255;                             // Alpha
+			}
+
+			context.putImageData(image, 0, 0);
+		}
+
+		document.getElementById('refresh').addEventListener('click', generateImage);
+		generateImage();
+	</script>
+</body>
+</html>
