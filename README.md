@@ -1,6 +1,6 @@
 # Random numbers
 
-So the whole idea of this project is to learn about HTML and Python codes
+So the whole idea of this project is to learn about HTML and Python codes while exploring the limits of computers trough mathematics
 
 ## Ideas plans for this project
 - Make a random number generator in html and python
