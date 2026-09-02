@@ -23,7 +23,8 @@ So the whole idea of this project is to learn about HTML and Python codes while 
 #### Python
 - So in python you can just use the built in **random** function to generate a random number with
 >random.randint(0, 255)
-so that is pretty easy i think but now how do you display that
+
+- so that is pretty easy i think. but now how do you display that?
 
 #### HTML
 - In HTML you can finally display colors and also use functions but you need JavaScript instead of python
